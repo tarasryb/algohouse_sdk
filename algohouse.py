@@ -93,6 +93,7 @@ def get_trades(user_email: str, signkey: str,
                from_time: str, to_time: str) -> pd.DataFrame:
     """
 
+    Get trades historical data
     :param user_email: e-mail of the Algohouse user who registered as API user
     :param signkey: the key to sign the request
     :param exchange: exchange name
