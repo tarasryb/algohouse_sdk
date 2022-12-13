@@ -127,6 +127,7 @@ def get_trades(user_email: str, signkey: str,
                          )
 
         df['ts'] = pd.to_datetime(df['ts'], unit='ms')
+        df = df.drop(columns=['nan'])
     except Exception:
         print(traceback.format_exc())
         df = None
