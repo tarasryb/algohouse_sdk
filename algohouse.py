@@ -58,7 +58,6 @@ def get_reference_data(exchanges: list = None) -> pd.DataFrame:
     query = f"/info"
     url = f"{DOMAIN}{query}"
     contents = urllib.request.urlopen(url).read()
-    print('***', contents)
     lines = str(contents).split('\\n')
     result = []
     result_rec = {'exchange': None, 'instruments': []}
