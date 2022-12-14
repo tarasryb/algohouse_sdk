@@ -11,11 +11,11 @@ import re
 
 DOMAIN = 'https://api.algohouse.ai'
 
-trades_names = ["ts", "bs", "price", "quantity", "nan"]
+trades_names = ["ts", "bs", "price", "volume", "nan"]
 trades_types = {"ts": "int64",
                 "bs": "str",
                 "price": "float",
-                "quantity": "float",
+                "volume": "float",
                 "nan": "str"}
 
 trades_aggregated_names = ["ts", "open", "high", "low", "close", "volume", "rec_count", "avg_price"]

@@ -16,6 +16,7 @@ def test_get_trades_aggregated():
                                           from_time='2022-11-12T00:00:00',
                                           to_time='2022-11-20T23:00:00',
                                           aggregation='1m')
+    print()
     print(res)
     assert not res is None
 
@@ -26,6 +27,7 @@ def test_get_trades():
                                           exchange='binance/f',
                                           from_time='2022-11-12T00:00:00',
                                           to_time='2022-11-20T23:00:00')
+    print()
     print(res)
     assert not res is None
 
