@@ -2,6 +2,7 @@ import datetime
 import pandas as pd
 
 import algohouse as ah
+import ah_utils as ahu
 
 USER_EMAIL = 'tarasryb@gmail.com'
 SIGNKEY = '9566c74d10037c4d7bbb0407d1e2c649'
@@ -31,10 +32,4 @@ def test_get_trades():
     print(res)
     assert not res is None
 
-
-def test_ssl():
-    key = "9566c74d10037c4d7bbb0407d1e2c649"
-    q = "/trades_aggregated?ins=1000LUNCBUSD&ex=binance/f&from=2020-01-01T00:00:00&to=2022-12-07T23:00:00&aggregation=1m&signerEmail=tarasryb@gmail.com&requestTimestamp=1670846172000"
-    res = ah.signature(key, q)
-    assert res == 'd063e03c80b7ed1f20707cab8e2ce89b5eb2b16fb848b9b25c03b8702add0342'
 

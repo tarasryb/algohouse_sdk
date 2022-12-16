@@ -12,7 +12,7 @@ def test_get_info():
 
 def test_get_info_2():
     res = ah.get_reference_data(['bitfinex/d', 'binance/f'])
-    print(res)
+    # print(res)
     assert not res is None
 
 
