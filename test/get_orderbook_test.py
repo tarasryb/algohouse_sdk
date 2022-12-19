@@ -35,7 +35,7 @@ def _test_get_orderbook_reset():
     assert not res is None
 
 
-def test_get_cached_orderbook():
+def _test_get_cached_orderbook():
     ahs.DOMAIN = 'http://127.0.0.1:5000'
     res = ah.get_orderbook(USER_EMAIL, SIGNKEY,
                                           exchange='small',  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
@@ -58,17 +58,17 @@ def test_get_cached_orderbook():
     assert not res is None
 
 
-
-
-def _test_get_orderbook_md():
-    res = ah.get_orderbook_md(USER_EMAIL, SIGNKEY,
-                                          exchange='binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
-                                          instrument='BTCBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
+def test_get_cached_orderbook_1():
+    ahs.DOMAIN = 'http://127.0.0.1:5000'
+    res = ah.get_orderbook(USER_EMAIL, SIGNKEY,
+                                          exchange='set_1',
+                                          instrument='1000LUNCBUSD',  # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
                                           from_time='2022-11-12T10:00:00',
-                                          to_time='2022-11-12T10:00:10',
                                           levels=10
                            )
-    print(res.shape)
+    print(len(res['bid']))
+    print(len(res['ask']))
     assert not res is None
+
 
 

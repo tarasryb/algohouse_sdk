@@ -107,7 +107,8 @@ def build_raw_md(df, for_time):
 def build_raw_md_for_side(df, side, for_time):
     df_side = df.loc[df['side'] == side]
 
-    df_side_filtered = filter_by_price(df_side)
+    # df_side_filtered = filter_by_price(df_side)
+    df_side_filtered = df_side
 
     side_raw_md = build_raw_md(df_side_filtered, for_time)
     side_raw_md_df = pd.DataFrame({'price': side_raw_md.keys(), 'amount': side_raw_md.values()})
