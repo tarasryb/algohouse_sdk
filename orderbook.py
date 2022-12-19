@@ -36,7 +36,7 @@ def fits_to_cache(exchange, instrument, from_time):
 def get_orderbook_from_server(user_email: str, signkey: str,
                               exchange: str, instrument: str,
                               from_time: str) -> pd.DataFrame:
-    query = f"/orderbooks?ins={instrument}&ex={exchange}&from={from_time}&limit={ahs.ORDERS_TO_READ}"  # &to={to_time}
+    query = f"/orderbooks?ins={instrument}&ex={exchange}&from={from_time}&limit={ahs.ORDER_LINES_TO_READ}"  # &to={to_time}
     rts = str(int(time.time()) * 1000)
     q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
     sig = ahu.signature(signkey, q)

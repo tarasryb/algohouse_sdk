@@ -21,14 +21,18 @@ def normalize_orders_fn(df):
             pq = pq_pair.split('@')
             if len(pq) < 2:
                 # chunk like "+432"
-                delta_ms = int(pq[0])
+                try:
+                    delta_ms = int(pq[0])
+                except ValueError as e:
+                    print('\n!!!ValueError exception (delta_ms) ' + pq[0])
+
                 row_ts = row['ts'] + timedelta(milliseconds=delta_ms)
                 continue
             try:
                 q = float(pq[0])
                 p = float(pq[1])
             except ValueError as e:
-                # print('\n!!!ValueError exception ' + pq_pair)
+                print('\n!!!ValueError exception (pq pair) ' + pq_pair)
                 continue
 
             if row['bs'] == 'S':

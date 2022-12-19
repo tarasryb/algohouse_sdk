@@ -45,8 +45,10 @@ def test_get_cached_orderbook():
                            )
     print(len(res['bid']))
     print(len(res['ask']))
+
+    ahs.ORDER_LINES_TO_READ = 1000
     res = ah.get_orderbook(USER_EMAIL, SIGNKEY,
-                                          exchange='small', #'big,small, tiny'  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
+                                          exchange='binance/f', #'big,small, tiny'  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
                                           instrument='1000LUNCBUSD',  # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
                                           from_time='2022-11-12T10:00:00',
                                           levels=10
