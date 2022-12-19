@@ -36,9 +36,9 @@ def normalize_orders_fn(df):
                 continue
 
             if row['bs'] == 'S':
-                side = 'bid'
-            else:
                 side = 'ask'
+            else:
+                side = 'bid'
 
             result.append({
                 'ts': row_ts,
