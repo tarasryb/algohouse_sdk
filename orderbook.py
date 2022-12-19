@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 import io
 import time
 import traceback
@@ -15,12 +16,27 @@ orderbook_types = {"ts": "int64",
                    "delta": "str",
                    "reset": "str"}
 
+df_n_cached = None
+exchange_cached = None
+instrument_cached = None
 
-def get_orderbook(user_email: str, signkey: str,
-                  exchange: str, instrument: str,
-                  from_time: str, to_time: str,
-                  metric: str) -> pd.DataFrame:
-    query = f"/orderbooks?ins={instrument}&ex={exchange}&from={from_time}&to={to_time}"
+
+def fits_to_cache(exchange, instrument, from_time):
+    if (df_n_cached is None) | (exchange_cached is None) | (instrument_cached is None):
+        return False
+
+    from_time_cached = df_n_cached['ts'].min()
+    to_time_cached = df_n_cached['ts'].max()
+    from_time_dt = datetime.strptime(from_time, ahs.DATETIME_FORMAT)
+    fits_to_time_cached = (from_time_dt >= from_time_cached) & (from_time_dt <= to_time_cached)
+
+    return (exchange == exchange_cached) & (instrument == instrument_cached) & fits_to_time_cached
+
+
+def get_orderbook_from_server(user_email: str, signkey: str,
+                              exchange: str, instrument: str,
+                              from_time: str) -> pd.DataFrame:
+    query = f"/orderbooks?ins={instrument}&ex={exchange}&from={from_time}&limit={ahs.ORDERS_TO_READ}"  # &to={to_time}
     rts = str(int(time.time()) * 1000)
     q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
     sig = ahu.signature(signkey, q)
@@ -39,7 +55,7 @@ def get_orderbook(user_email: str, signkey: str,
                      lineterminator='\\n',
                      header=None,
                      comment="#",
-                     # engine='python',
+                     engine='python',
                      names=orderbook_names,
                      na_values=[int, '', 'NA'],
                      keep_default_na=False,
@@ -53,37 +69,24 @@ def get_orderbook(user_email: str, signkey: str,
         df = None
 
     df_n = normalize_orders(df)
-
-    if metric == 'full':
-        return df_n
-
-    if metric == 'reset':
-        return df_n.loc[df_n['reset'] == 'R']
-
-    # if metric == 'md':
-    #     df_md = build_md(df_n)
-    #     return df_md
-
-    # df_reset_g = df_reset.groupby('ts')
-
-    return
-
-    # md_list = []
-    # for g in df_g:
-    #     md_group = process_order_group(g, exchange, instrument, side)
-    #     md_list.append(md_group)
-    #     print(pd.DataFrame.from_records(md_group).to_csv())
-    #
-    # return df
+    return df_n
 
 
-def get_orderbook_md(user_email: str, signkey: str,
-                     exchange: str, instrument: str,
-                     from_time: str, to_time: str,
-                     levels: int) -> pd.DataFrame:
-    df = get_orderbook(user_email, signkey, exchange, instrument, from_time, to_time,
-                       metric='full')
+def get_orderbook(user_email: str, signkey: str,
+                  exchange: str, instrument: str,
+                  from_time: str,
+                  levels: int) -> dict:
 
-    df_md = build_md(df)
+    global exchange_cached
+    global instrument_cached
+    global df_n_cached
 
-    return df
+    if not fits_to_cache(exchange, instrument, from_time):
+        exchange_cached = exchange
+        instrument_cached = instrument
+        df_n_cached = get_orderbook_from_server(user_email, signkey, exchange, instrument, from_time)
+
+    df_md = build_md(df_n_cached, from_time, levels)
+    return df_md
+
+
