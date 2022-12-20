@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("algohouse_sdk")
 
 import pandas as pd
@@ -31,8 +32,8 @@ def get_trades(user_email: str, signkey: str,
     :return: Pandas DataFrame with the columns: ts, open, high, low, close, volume, rec_count, avg_price
     """
     return trades.get_trades(user_email, signkey,
-               exchange, instrument,
-               from_time, to_time)
+                             exchange, instrument,
+                             from_time, to_time)
 
 
 def get_trades_aggregated(user_email: str, signkey: str,
@@ -52,9 +53,9 @@ def get_trades_aggregated(user_email: str, signkey: str,
     :return: Pandas DataFrame with the columns: ts, open, high, low, close, volume, rec_count, avg_price
     """
     return trades.get_trades_aggregated(user_email, signkey,
-                          exchange, instrument,
-                          from_time, to_time,
-                          aggregation)
+                                        exchange, instrument,
+                                        from_time, to_time,
+                                        aggregation)
 
 
 def get_orderbook(user_email: str, signkey: str,
@@ -71,34 +72,11 @@ def get_orderbook(user_email: str, signkey: str,
     :param instrument: instrument name
     :param from_time: start time of the requested data (the number of orders to read appointed in ah_settings.ORDERS_TO_READ)
     :param levels: number of levels in Market Depth, if 0 or None, return RAW md
-    :param snapshot: if True, returns the dictionary with "snapshot" key which contains DataFrame with "ts, side, reset, price, amount" columns
+    :param snapshot: if True, returns the dictionary with "snapshot" key which contains DataFrame with "ts, side, reset, price, size" columns
 
-    :return: (see "snapshot" parameter), if False, returns the Dictionary which contains two keys: "bid" and "ask". Each key contains Pandas DataFrame with the columns: price, amount
+    :return: (see "snapshot" parameter), if False, returns the Dictionary which contains two keys: "bid" and "ask". Each key contains Pandas DataFrame with the columns: price, size
     """
     return orderbook.get_orderbook(user_email, signkey,
-                  exchange, instrument,
-                  from_time,
-                  levels, snapshot)
-
-
-def get_orderbook_md(user_email: str, signkey: str,
-                  exchange: str, instrument: str,
-                  from_time: str, to_time: str,
-                  levels: int) -> pd.DataFrame:
-    """
-
-    Get orderbook market depth
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
-    :param exchange: exchange name
-    :param instrument: instrument name
-    :param from_time: start time of the requested data
-    :param to_time: end time of the requested data
-    :param levels: the number of price levels
-
-    :return: Pandas DataFrame with the columns: bid_levels[:levels], ask_levels[:levels]
-    """
-    return orderbook.get_orderbook_md(user_email, signkey,
-                  exchange, instrument,
-                  from_time, to_time,
-                  levels)
+                                   exchange, instrument,
+                                   from_time,
+                                   levels, snapshot)

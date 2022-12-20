@@ -45,7 +45,7 @@ def normalize_orders_fn(df):
                 'side': side,
                 'reset': row['reset'],
                 'price': p,
-                'amount': q
+                'size': q
             })
     return result
 
@@ -91,7 +91,7 @@ def build_raw_md(df, for_time):
             return md
 
         p = row['price']
-        a = row['amount']
+        a = row['size']
 
         if a == 0:
             if not p in md.keys():
@@ -113,7 +113,7 @@ def build_raw_md_for_side(df, side, for_time):
         df_side_filtered = df_side
 
     side_raw_md = build_raw_md(df_side_filtered, for_time)
-    side_raw_md_df = pd.DataFrame({'price': side_raw_md.keys(), 'amount': side_raw_md.values()})
+    side_raw_md_df = pd.DataFrame({'price': side_raw_md.keys(), 'size': side_raw_md.values()})
     return side_raw_md_df.sort_values(by=['price'])
 
 
@@ -138,7 +138,7 @@ def build_md_for_side(df, levels):
         market_depth_list.append({
             'price': interval['start'],
             # 'stop_p': interval['stop'],
-            'amount': interval_df.amount.sum()}
+            'size': interval_df.size.sum()}
         )
     market_depth = pd.DataFrame.from_records(market_depth_list)
 
@@ -164,7 +164,7 @@ def build_md_classic_for_side(md):
     for index, row in md.iterrows():
 
         if not index == 0:
-            size = size + row['amount']
+            size = size + row['size']
 
         md_c.append({"price": row['price'],
                      "size": size})
