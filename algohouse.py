@@ -58,14 +58,23 @@ def get_trades_aggregated(user_email: str, signkey: str,
                                         aggregation)
 
 
+def reset_orderbook_cache():
+    """
+    Reset order book cache
+    """
+    orderbook.exchange_cached = None
+    orderbook.instrument_cached = None
+    orderbook.df_n_cached = None
+
+
 def get_orderbook(user_email: str, signkey: str,
                   exchange: str, instrument: str,
                   from_time: str,
                   levels: int,
                   snapshot=False) -> dict:
     """
-
     Get orderbook records
+
     :param user_email: e-mail of the Algohouse user who registered as API user
     :param signkey: the key to sign the request
     :param exchange: exchange name
