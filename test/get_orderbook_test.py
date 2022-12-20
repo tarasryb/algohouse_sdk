@@ -77,16 +77,16 @@ def _test_get_cached_orderbook_snapshot():
 
 
 def test_get_orderbook_1():
-    ahs.DOMAIN = 'http://127.0.0.1:5000'
+    # ahs.DOMAIN = 'http://127.0.0.1:5000'
     res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
-                                  exchange='file',
-                                  instrument='set_1.txt',  # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
+                                  exchange='binance/f',  #'file',
+                                  instrument='BTCUSDT', # 'set_1.txt',  # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
                                   from_time='2022-11-12T10:00:00',
                                   levels=10
                                   )
     print(len(res['bid']))
     print(len(res['ask']))
 
-    print(len(res_c['bid']))
-    print(len(res_c['ask']))
+    print('bid\n', res_c['bid'])
+    print('ask\n', res_c['ask'])
     assert not res is None
