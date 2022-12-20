@@ -8,7 +8,7 @@ import urllib.request
 import re
 import ah_settings as ahs
 import ah_utils as ahu
-from orderutils import normalize_orders, build_md
+from orderutils import normalize_orders, build_md, build_md_classic
 
 orderbook_names = ["ts", "bs", "delta", "reset"]
 orderbook_types = {"ts": "int64",
@@ -75,7 +75,8 @@ def get_orderbook_from_server(user_email: str, signkey: str,
 def get_orderbook(user_email: str, signkey: str,
                   exchange: str, instrument: str,
                   from_time: str,
-                  levels: int) -> dict:
+                  levels: int,
+                  snapshot=False) -> dict:
 
     global exchange_cached
     global instrument_cached
@@ -86,7 +87,11 @@ def get_orderbook(user_email: str, signkey: str,
         instrument_cached = instrument
         df_n_cached = get_orderbook_from_server(user_email, signkey, exchange, instrument, from_time)
 
+    if snapshot:
+        return {"snapshot": df_n_cached}
+
     df_md = build_md(df_n_cached, from_time, levels)
-    return df_md
+    md_classic = build_md_classic(df_md)
+    return df_md, md_classic
 
 

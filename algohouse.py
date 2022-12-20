@@ -60,7 +60,8 @@ def get_trades_aggregated(user_email: str, signkey: str,
 def get_orderbook(user_email: str, signkey: str,
                   exchange: str, instrument: str,
                   from_time: str,
-                  levels: int) -> dict:
+                  levels: int,
+                  snapshot=False) -> dict:
     """
 
     Get orderbook records
@@ -70,14 +71,14 @@ def get_orderbook(user_email: str, signkey: str,
     :param instrument: instrument name
     :param from_time: start time of the requested data (the number of orders to read appointed in ah_settings.ORDERS_TO_READ)
     :param levels: number of levels in Market Depth, if 0 or None, return RAW md
-    #TODO: clarify get_orderbook metric parameter meaning
+    :param snapshot: if True, returns the dictionary with "snapshot" key which contains DataFrame with "ts, side, reset, price, amount" columns
 
-    :return: Dictionary which contains two keys: "bid" and "ask". Each key contains Pandas DataFrame with the columns: ts, side, reset, price, amount
+    :return: (see "snapshot" parameter), if False, returns the Dictionary which contains two keys: "bid" and "ask". Each key contains Pandas DataFrame with the columns: price, amount
     """
     return orderbook.get_orderbook(user_email, signkey,
                   exchange, instrument,
                   from_time,
-                  levels)
+                  levels, snapshot)
 
 
 def get_orderbook_md(user_email: str, signkey: str,
