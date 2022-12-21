@@ -43,7 +43,11 @@ def get_orderbook_from_server(user_email: str, signkey: str,
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 
-    contents = urllib.request.urlopen(url).read()
+    try:
+        contents = urllib.request.urlopen(url).read()
+    except TimeoutError as e:
+        print('!!! API connection timeout')
+        return
     print()
     for match in re.finditer('# ', str(contents)):
         print('***', str(contents)[match.end():match.end() + 100])

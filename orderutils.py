@@ -24,6 +24,7 @@ def normalize_orders_fn(df):
                 try:
                     delta_ms = int(pq[0])
                 except ValueError as e:
+                    delta_ms = 0
                     print('\n!!!ValueError exception (delta_ms) ' + pq[0])
 
                 row_ts = row['ts'] + timedelta(milliseconds=delta_ms)
@@ -146,6 +147,8 @@ def build_md_for_side(df, levels):
 
 
 def build_md(df, for_time, levels: int):
+    if df.empty:
+        return {"bid": pd.DataFrame(), "ask": pd.DataFrame()}
 
     bid_raw_md = build_raw_md_for_side(df, 'bid', for_time)
     ask_raw_md = build_raw_md_for_side(df, 'ask', for_time)
@@ -175,13 +178,19 @@ def build_md_classic_for_side(md):
 
 def build_md_classic(md):
     bid_df = md['bid']
-    bid_df = bid_df.sort_values(by=['price'], ascending=False, ignore_index=True)
-    bid_md_c = build_md_classic_for_side(bid_df)
-    bid_md_c = bid_md_c.sort_values(by=['price'], ignore_index=True)
+    if bid_df.empty:
+        bid_md_c = pd.DataFrame()
+    else:
+        bid_df = bid_df.sort_values(by=['price'], ascending=False, ignore_index=True)
+        bid_md_c = build_md_classic_for_side(bid_df)
+        bid_md_c = bid_md_c.sort_values(by=['price'], ignore_index=True)
 
     ask_df = md['ask']
-    ask_df = ask_df.sort_values(by=['price'], ignore_index=True)
-    ask_md_c = build_md_classic_for_side(ask_df)
+    if ask_df.empty:
+        ask_md_c = pd.DataFrame()
+    else:
+        ask_df = ask_df.sort_values(by=['price'], ignore_index=True)
+        ask_md_c = build_md_classic_for_side(ask_df)
 
     return {"bid": bid_md_c, "ask": ask_md_c}
 
