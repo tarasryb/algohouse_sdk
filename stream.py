@@ -20,16 +20,6 @@ def get_stream(user_email: str, signkey: str,
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 
-    # try:
-    #     f = urllib.request.urlopen(url)
-    # except TimeoutError as e:
-    #     print('!!! API connection timeout')
-    #     return
-    #
-    # while True:
-    #     content = f.read().decode('utf-8')
-    #     print(content)
-
     r = requests.get(url, stream=True)
 
     if r.encoding is None:

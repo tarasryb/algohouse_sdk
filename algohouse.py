@@ -110,14 +110,14 @@ def get_stream(user_email: str, signkey: str,
                on_trade=None, on_order=None, on_error=None
                ):
     """
-
-    :param user_email:
-    :param signkey:
-    :param exchange:
-    :param instrument:
-    :param on_trade:
-    :param on_order:
-    :param on_error:
+    Subscribe to AlgoHouse streaming data
+    :param user_email: e-mail of the Algohouse user who registered as API user
+    :param signkey: the key to sign the request
+    :param exchange: exchange name
+    :param instrument: instrument name
+    :param on_trade: on get trades callback, use DataFrame parameter as get_trades function
+    :param on_order: on get orders callback, use DataFrame parameter as get_orderbook function
+    :param on_error: error callback
     :return:
     """
     return stream.get_stream(user_email, signkey,

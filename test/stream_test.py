@@ -17,6 +17,7 @@ def on_error_fn(error: Exception):
     # print(traceback.format_exc())
     print('>>> Got error: ', error)
 
+
 def main():
     ah.get_stream(USER_EMAIL, SIGNKEY,
                   exchange='binance/f',
