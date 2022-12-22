@@ -16,6 +16,13 @@ orderbook_types = {"ts": "int64",
                    "delta": "str",
                    "reset": "str"}
 
+orderbook_stream_names = ["ts", "ins", "bs", "delta", "reset"]
+orderbook_stream_types = {"ts": "int64",
+                          "ins": "str",
+                          "bs": "str",
+                          "delta": "str",
+                          "reset": "str"}
+
 df_n_cached = None
 exchange_cached = None
 instrument_cached = None
@@ -70,7 +77,31 @@ def get_orderbook_from_server(user_email: str, signkey: str,
         df['ts'] = pd.to_datetime(df['ts'], unit='ms')
     except Exception:
         print(traceback.format_exc())
-        df = None
+        return None
+
+    df_n = normalize_orders(df)
+    return df_n
+
+
+def parse_orders_stream(contents: str):
+    buffer = io.StringIO(contents)
+    try:
+        df = pd.read_csv(filepath_or_buffer=buffer,
+                         delimiter=' ',
+                         header=None,
+                         comment="#",
+                         engine='python',
+                         names=orderbook_stream_names,
+                         na_values=[int, '', 'NA'],
+                         keep_default_na=False,
+                         verbose=True,
+                         dtype=orderbook_stream_types
+                         )
+
+        df['ts'] = pd.to_datetime(df['ts'], unit='ms')
+    except Exception:
+        print(traceback.format_exc())
+        return None
 
     df_n = normalize_orders(df)
     return df_n
@@ -81,7 +112,6 @@ def get_orderbook(user_email: str, signkey: str,
                   from_time: str,
                   levels: int,
                   snapshot=False) -> dict:
-
     global exchange_cached
     global instrument_cached
     global df_n_cached
@@ -97,5 +127,3 @@ def get_orderbook(user_email: str, signkey: str,
     df_md = build_md(df_n_cached, from_time, levels)
     md_classic = build_md_classic(df_md)
     return df_md, md_classic
-
-

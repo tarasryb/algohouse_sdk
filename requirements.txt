@@ -28,3 +28,6 @@ vc=14.2=h21ff451_1
 vs2015_runtime=14.27.29016=h5e58377_2
 wheel=0.37.1=pyhd3eb1b0_0
 wincertstore=0.2=py37haa95532_2
+
+requests=2.28.1
+

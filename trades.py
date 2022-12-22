@@ -1,9 +1,9 @@
+import io
 import time
 import traceback
 import pandas as pd
 import ah_utils as ahu
 import ah_settings as ahs
-
 
 trades_names = ["ts", "bs", "price", "volume", "nan"]
 trades_types = {"ts": "int64",
@@ -21,6 +21,13 @@ trades_aggregated_types = {"ts": "int64",
                            "volume": "float",
                            "rec_count": "int",
                            "avg_price": "float"}
+
+trades_stream_names = ["ts", "ins", "bs", "price", "volume"]
+trades_stream_types = {"ts": "int64",
+                       "ins": "str",
+                       "bs": "str",
+                       "price": "float",
+                       "volume": "float"}
 
 
 def get_trades(user_email: str, signkey: str,
@@ -64,6 +71,29 @@ def get_trades(user_email: str, signkey: str,
 
         df['ts'] = pd.to_datetime(df['ts'], unit='ms')
         df = df.drop(columns=['nan'])
+    except Exception:
+        print(traceback.format_exc())
+        df = None
+
+    return df
+
+
+def parse_trades_stream(contents: str):
+    buffer = io.StringIO(contents)
+    try:
+        df = pd.read_csv(filepath_or_buffer=buffer,
+                         delimiter=' ',
+                         header=None,
+                         comment="#",
+                         engine='python',
+                         names=trades_stream_names,
+                         na_values=[int, '', 'NA'],
+                         keep_default_na=False,
+                         verbose=True,
+                         dtype=trades_stream_types
+                         )
+
+        df['ts'] = pd.to_datetime(df['ts'], unit='ms')
     except Exception:
         print(traceback.format_exc())
         df = None
@@ -115,5 +145,3 @@ def get_trades_aggregated(user_email: str, signkey: str,
         df = None
 
     return df
-
-

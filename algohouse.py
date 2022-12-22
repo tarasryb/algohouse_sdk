@@ -1,5 +1,7 @@
 import sys
 
+import stream
+
 sys.path.append("algohouse_sdk")
 
 import pandas as pd
@@ -15,6 +17,19 @@ def get_reference_data(exchanges: list = None) -> pd.DataFrame:
     :return: Pandas DataFrame with the columns: exchange (string), instruments (list of strings)
     """
     return reference_data.get_reference_data(exchanges)
+
+
+def get_reference_data_v2(exchange: str = None,
+                          instrument: str = None,
+                          instrument2: str = None) -> pd.DataFrame:
+    """
+
+    :param exchange: optional exchange name, in None, the function will return all of them
+    :param instrument: instrument name
+    :param instrument2: second instrument name
+    :return: Pandas DataFrame with the columns: exchange (string), instruments (list of strings)
+    """
+    return reference_data.get_reference_data_v2(exchange, instrument, instrument2)
 
 
 def get_trades(user_email: str, signkey: str,
@@ -74,7 +89,6 @@ def get_orderbook(user_email: str, signkey: str,
                   snapshot=False) -> dict:
     """
     Get orderbook records
-
     :param user_email: e-mail of the Algohouse user who registered as API user
     :param signkey: the key to sign the request
     :param exchange: exchange name
@@ -89,3 +103,24 @@ def get_orderbook(user_email: str, signkey: str,
                                    exchange, instrument,
                                    from_time,
                                    levels, snapshot)
+
+
+def get_stream(user_email: str, signkey: str,
+               exchange: str, instrument: str,
+               on_trade=None, on_order=None, on_error=None
+               ):
+    """
+
+    :param user_email:
+    :param signkey:
+    :param exchange:
+    :param instrument:
+    :param on_trade:
+    :param on_order:
+    :param on_error:
+    :return:
+    """
+    return stream.get_stream(user_email, signkey,
+                             exchange, instrument,
+                             on_trade, on_order, on_error
+                             )

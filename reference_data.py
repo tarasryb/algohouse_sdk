@@ -12,11 +12,6 @@ def get_fetcher(line):
 
 
 def get_reference_data(exchanges: list = None) -> pd.DataFrame:
-    """
-
-    :param exchanges: optional list of exchanges, in None, the function will return all of them
-    :return: Pandas DataFrame with the columns: exchange (string), instruments (list of strings)
-    """
     query = f"/info"
     url = f"{ahs.DOMAIN}{query}"
     contents = urllib.request.urlopen(url).read()
@@ -49,3 +44,35 @@ def get_reference_data(exchanges: list = None) -> pd.DataFrame:
     return pd.DataFrame.from_records(result)
 
 
+def filter_by_instrument(df, instrument):
+    if instrument is None:
+        return df
+
+    result = []
+    for index, row in df.iterrows():
+        instruments = row['instruments']
+        matching = [s for s in instruments if instrument.upper() in s.upper()]
+        if matching:
+            result.append({'exchange': row['exchange'],
+                           'instruments': matching})
+    return pd.DataFrame.from_records(result)
+
+
+def get_reference_data_v2(exchange: str = None,
+                          instrument: str = None,
+                          instrument2: str = None) -> pd.DataFrame:
+    res = get_reference_data()
+    if res.empty:
+        return pd.DataFrame()
+
+    if exchange is None:
+        return filter_by_instrument(res, instrument)
+
+    exchanges = res[res['exchange'].str.contains(exchange)]
+    if len(exchanges) == 0:
+        return pd.DataFrame()
+
+    instrument_filtered = filter_by_instrument(exchanges, instrument)
+    instrument_filtered = filter_by_instrument(instrument_filtered, instrument2)
+
+    return instrument_filtered

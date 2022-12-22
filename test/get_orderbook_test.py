@@ -78,7 +78,7 @@ def test_get_orderbook_1():
     # second reset 2022-11-12T10:04:21.476
     res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
                                   exchange='binance/f',  #'binance/f',  #'file',
-                                  instrument='LITUSDT',  #'ETHUSDT',  # 'orderbooks_ins-BTCUSDT_ex-binance-f_from-2022-11-12T10-00-00.txt',  #'BTCUSDT', # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
+                                  instrument='ETHUSDT', #'LITUSDT',  #'ETHUSDT',  # 'orderbooks_ins-BTCUSDT_ex-binance-f_from-2022-11-12T10-00-00.txt',  #'BTCUSDT', # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
                                   from_time='2022-11-12T09:00:00',  # '2022-12-12T00:00:00',
                                   levels=0
                                   )
