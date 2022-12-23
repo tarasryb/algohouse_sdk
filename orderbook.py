@@ -8,7 +8,7 @@ import urllib.request
 import re
 import ah_settings as ahs
 import ah_utils as ahu
-from orderutils import normalize_orders, build_md, build_md_classic
+from orderutils import normalize_orders, build_md, build_md_classic, normalize_orders_single_core
 
 orderbook_names = ["ts", "bs", "delta", "reset"]
 orderbook_types = {"ts": "int64",
@@ -103,7 +103,7 @@ def parse_orders_stream(contents: str):
         print(traceback.format_exc())
         return None
 
-    df_n = normalize_orders(df)
+    df_n = normalize_orders_single_core(df)
     return df_n
 
 

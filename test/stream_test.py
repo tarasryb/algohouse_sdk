@@ -1,3 +1,5 @@
+import datetime
+
 import algohouse as ah
 
 
@@ -9,8 +11,13 @@ def on_trade_fn(trade):
     print('>>> Got trade:\n', trade)
 
 
-def on_order_fn(order):
-    print('\n>>> Got order:\n', order.info())
+order_callback_count = 0
+
+
+def on_order_fn(orders):
+    global order_callback_count
+    print('\n>>> Got orders:\n', order_callback_count, datetime.datetime.now(), len(orders.index))
+    order_callback_count += 1
 
 
 def on_error_fn(error: Exception):
@@ -20,7 +27,7 @@ def on_error_fn(error: Exception):
 
 def main():
     ah.get_stream(USER_EMAIL, SIGNKEY,
-                  exchange='binance/f',
+                  exchange='binance',
                   instrument='ETHUSDT',
                   # on_trade=on_trade_fn,
                   on_order=on_order_fn,

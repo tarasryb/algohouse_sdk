@@ -64,6 +64,11 @@ def normalize_orders(df):
     return pd.DataFrame.from_dict(result)
 
 
+def normalize_orders_single_core(df):
+    result_list = normalize_orders_fn(df)
+    return pd.DataFrame.from_records(result_list)
+
+
 def filter_by_price(df):
     df_q = df.price.quantile(ahs.FILTER_BAD_PRICES_QUANTILE)
     df_min = df_q - (df_q * ahs.FILTER_BAD_PRICES_RATIO)
