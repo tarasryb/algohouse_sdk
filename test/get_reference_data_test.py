@@ -25,5 +25,6 @@ def test_get_info_v2():
 def test_get_info_v2_2():
     res = ah.get_reference_data_v2(exchange='binance', instrument='btc', instrument2='usdt')
     print(res)
+
     assert not res is None
 
