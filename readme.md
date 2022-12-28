@@ -35,3 +35,6 @@ A bit faster:
 !dpkg -i libta.deb ta.deb
 !pip install ta-lib
 ````
+#### run for VS Code
+jupyter notebook --no-browser --NotebookApp.allow_origin_pat=https://.*vscode-cdn\.net
+jupyter notebook --no-browser --NotebookApp.allow_origin='*'
