@@ -31,6 +31,8 @@ instrument_cached = None
 def fits_to_cache(exchange, instrument, from_time):
     if (df_n_cached is None) | (exchange_cached is None) | (instrument_cached is None):
         return False
+    if 'ts' not in df_n_cached.keys():
+        return False
 
     from_time_cached = df_n_cached['ts'].min()
     to_time_cached = df_n_cached['ts'].max()
