@@ -42,7 +42,7 @@ def get_trades(user_email: str, signkey: str,
     :param instrument: instrument name
     :param from_time: start time of the requested data
     :param to_time: end time of the requested data
-    :return: Pandas DataFrame with the columns: ts, open, high, low, close, volume, rec_count, avg_price
+    :return: Pandas DataFrame with the columns: ts, bs (B, S), price, volume
     """
     query = f"/trades?ins={instrument}&ex={exchange}&from={from_time}&to={to_time}"
     rts = str(int(time.time()) * 1000)

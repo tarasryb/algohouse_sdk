@@ -44,7 +44,7 @@ def get_trades(user_email: str, signkey: str,
     :param instrument: instrument name
     :param from_time: start time of the requested data
     :param to_time: end time of the requested data
-    :return: Pandas DataFrame with the columns: ts, open, high, low, close, volume, rec_count, avg_price
+    :return: Pandas DataFrame with the columns: ts, bs (B, S), price, volume
     """
     return trades.get_trades(user_email, signkey,
                              exchange, instrument,
