@@ -6,6 +6,7 @@ import urllib.request
 import pandas as pd
 import urllib.request
 import re
+import ah_connection as ahc
 import ah_settings as ahs
 import ah_utils as ahu
 from orderutils import normalize_orders, build_md, build_md_classic, normalize_orders_single_core
@@ -42,13 +43,13 @@ def fits_to_cache(exchange, instrument, from_time):
     return (exchange == exchange_cached) & (instrument == instrument_cached) & fits_to_time_cached
 
 
-def get_orderbook_from_server(user_email: str, signkey: str,
+def get_orderbook_from_server(connection: ahc.Connection,
                               exchange: str, instrument: str,
                               from_time: str) -> pd.DataFrame:
     query = f"/orderbooks?ins={instrument}&ex={exchange}&from={from_time}&limit={ahs.ORDER_LINES_TO_READ}"  # &to={to_time}
     rts = str(int(time.time()) * 1000)
-    q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
-    sig = ahu.signature(signkey, q)
+    q = f"{query}&signerEmail={connection.user_email}&requestTimestamp={rts}"
+    sig = ahu.signature(connection.signkey, q)
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 
@@ -109,10 +110,10 @@ def parse_orders_stream(contents: str):
     return df_n
 
 
-def get_orderbook(user_email: str, signkey: str,
+def get_orderbook(connection: ahc.Connection,
                   exchange: str, instrument: str,
                   from_time: str,
-                  levels: int,
+                  levels: int = None,
                   snapshot=False) -> dict:
     global exchange_cached
     global instrument_cached
@@ -121,7 +122,7 @@ def get_orderbook(user_email: str, signkey: str,
     if not fits_to_cache(exchange, instrument, from_time):
         exchange_cached = exchange
         instrument_cached = instrument
-        df_n_cached = get_orderbook_from_server(user_email, signkey, exchange, instrument, from_time)
+        df_n_cached = get_orderbook_from_server(connection, exchange, instrument, from_time)
 
     if snapshot:
         return {"snapshot": df_n_cached}

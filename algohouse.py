@@ -8,7 +8,7 @@ import pandas as pd
 import reference_data
 import trades
 import orderbook
-
+import ah_connection as ahc
 
 def get_reference_data(exchanges: list = None) -> pd.DataFrame:
     """
@@ -32,34 +32,32 @@ def get_reference_data_v2(exchange: str = None,
     return reference_data.get_reference_data_v2(exchange, instrument, instrument2)
 
 
-def get_trades(user_email: str, signkey: str,
+def get_trades(connection: ahc.Connection,
                exchange: str, instrument: str,
                from_time: str, to_time: str) -> pd.DataFrame:
     """
 
     Get trades historical data
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse Connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param from_time: start time of the requested data
     :param to_time: end time of the requested data
     :return: Pandas DataFrame with the columns: ts, bs (B, S), price, volume
     """
-    return trades.get_trades(user_email, signkey,
+    return trades.get_trades(connection,
                              exchange, instrument,
                              from_time, to_time)
 
 
-def get_trades_aggregated(user_email: str, signkey: str,
+def get_trades_aggregated(connection: ahc.Connection,
                           exchange: str, instrument: str,
                           from_time: str, to_time: str,
                           aggregation: str = '1m') -> pd.DataFrame:
     """
 
     Get aggregated trades
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse Connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param from_time: start time of the requested data
@@ -67,7 +65,7 @@ def get_trades_aggregated(user_email: str, signkey: str,
     :param aggregation: the type of the aggregation (1m, 15m, 1h, 1d)
     :return: Pandas DataFrame with the columns: ts, open, high, low, close, volume, rec_count, avg_price
     """
-    return trades.get_trades_aggregated(user_email, signkey,
+    return trades.get_trades_aggregated(connection,
                                         exchange, instrument,
                                         from_time, to_time,
                                         aggregation)
@@ -82,15 +80,14 @@ def reset_orderbook_cache():
     orderbook.df_n_cached = None
 
 
-def get_orderbook(user_email: str, signkey: str,
+def get_orderbook(connection: ahc.Connection,
                   exchange: str, instrument: str,
                   from_time: str,
-                  levels: int,
+                  levels: int = None,
                   snapshot=False) -> dict:
     """
     Get orderbook records
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse Connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param from_time: start time of the requested data (the number of orders to read appointed in ah_settings.ORDERS_TO_READ)
@@ -99,20 +96,19 @@ def get_orderbook(user_email: str, signkey: str,
 
     :return: (see "snapshot" parameter), if False, returns the Dictionary which contains two keys: "bid" and "ask". Each key contains Pandas DataFrame with the columns: price, size
     """
-    return orderbook.get_orderbook(user_email, signkey,
+    return orderbook.get_orderbook(connection,
                                    exchange, instrument,
                                    from_time,
                                    levels, snapshot)
 
 
-def get_stream(user_email: str, signkey: str,
+def get_stream(connection: ahc.Connection,
                exchange: str, instrument: str,
                on_trade=None, on_order=None, on_error=None
                ):
     """
     Subscribe to AlgoHouse streaming data
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse Connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param on_trade: on get trades callback, use DataFrame parameter as get_trades function
@@ -120,7 +116,7 @@ def get_stream(user_email: str, signkey: str,
     :param on_error: error callback
     :return:
     """
-    return stream.get_stream(user_email, signkey,
+    return stream.get_stream(connection,
                              exchange, instrument,
                              on_trade, on_order, on_error
                              )

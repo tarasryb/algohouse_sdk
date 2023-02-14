@@ -3,20 +3,21 @@ import urllib.request
 
 import requests as requests
 
+import ah_connection as ahc
 import ah_settings as ahs
 import ah_utils as ahu
 import orderbook
 import trades
 
 
-def get_stream(user_email: str, signkey: str,
+def get_stream(connection: ahc.Connection,
                exchange: str, instrument: str,
                on_trade=None, on_order=None, on_error=None
                ):
     query = f"/stream?ins={instrument}&ex={exchange}"  # &to={to_time}
     rts = str(int(time.time()) * 1000)
-    q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
-    sig = ahu.signature(signkey, q)
+    q = f"{query}&signerEmail={connection.user_email}&requestTimestamp={rts}"
+    sig = ahu.signature(connection.signkey, q)
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 

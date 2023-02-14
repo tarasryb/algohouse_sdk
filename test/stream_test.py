@@ -1,10 +1,11 @@
 import datetime
 
 import algohouse as ah
+import ah_connection as ahc
 
 
-USER_EMAIL = 'tarasryb@gmail.com'
-SIGNKEY = '9566c74d10037c4d7bbb0407d1e2c649'
+USER_EMAIL = 'intern@intela.io'
+SIGNKEY = '7c45593ac289db2a1d37e6a0387bbd18'
 
 
 def on_trade_fn(trade):
@@ -26,10 +27,11 @@ def on_error_fn(error: Exception):
 
 
 def main():
-    ah.get_stream(USER_EMAIL, SIGNKEY,
-                  exchange='binance',
-                  instrument='ETHUSDT',
-                  # on_trade=on_trade_fn,
+    conn = ahc.Connection(USER_EMAIL, SIGNKEY)
+    ah.get_stream(conn,
+                  exchange='bitfinex', #'binance',
+                  instrument='BTCUSD', #'ETHUSDT',
+                  on_trade=on_trade_fn,
                   on_order=on_order_fn,
                   on_error=on_error_fn)
 

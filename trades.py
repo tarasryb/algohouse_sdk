@@ -2,6 +2,7 @@ import io
 import time
 import traceback
 import pandas as pd
+import ah_connection as ahc
 import ah_utils as ahu
 import ah_settings as ahs
 
@@ -30,14 +31,13 @@ trades_stream_types = {"ts": "int64",
                        "volume": "float"}
 
 
-def get_trades(user_email: str, signkey: str,
+def get_trades(connection: ahc.Connection,
                exchange: str, instrument: str,
                from_time: str, to_time: str) -> pd.DataFrame:
     """
 
     Get trades historical data
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param from_time: start time of the requested data
@@ -46,8 +46,8 @@ def get_trades(user_email: str, signkey: str,
     """
     query = f"/trades?ins={instrument}&ex={exchange}&from={from_time}&to={to_time}"
     rts = str(int(time.time()) * 1000)
-    q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
-    sig = ahu.signature(signkey, q)
+    q = f"{query}&signerEmail={connection.user_email}&requestTimestamp={rts}"
+    sig = ahu.signature(connection.signkey, q)
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 
@@ -101,14 +101,13 @@ def parse_trades_stream(contents: str):
     return df
 
 
-def get_trades_aggregated(user_email: str, signkey: str,
+def get_trades_aggregated(connection: ahc.Connection,
                           exchange: str, instrument: str,
                           from_time: str, to_time: str,
                           aggregation: str = '1m') -> pd.DataFrame:
     """
 
-    :param user_email: e-mail of the Algohouse user who registered as API user
-    :param signkey: the key to sign the request
+    :param connection: Algohouse connection object
     :param exchange: exchange name
     :param instrument: instrument name
     :param from_time: start time of the requested data
@@ -118,8 +117,8 @@ def get_trades_aggregated(user_email: str, signkey: str,
     """
     query = f"/trades_aggregated?ins={instrument}&ex={exchange}&from={from_time}&to={to_time}&aggregation={aggregation}"
     rts = str(int(time.time()) * 1000)
-    q = f"{query}&signerEmail={user_email}&requestTimestamp={rts}"
-    sig = ahu.signature(signkey, q)
+    q = f"{query}&signerEmail={connection.user_email}&requestTimestamp={rts}"
+    sig = ahu.signature(connection.signkey, q)
 
     url = f"{ahs.DOMAIN}{q}&signature={sig}"
 

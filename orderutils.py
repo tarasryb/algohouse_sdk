@@ -101,7 +101,8 @@ def build_raw_md(df, for_time):
 
         if a == 0:
             if not p in md.keys():
-                print('!!! Error, no key on delete position:' + str(p))
+                # print('!!! Error, no key on delete position:' + str(p))
+                pass
             else:
                 md.pop(p)
         else:

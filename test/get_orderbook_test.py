@@ -2,41 +2,44 @@ import datetime
 import pandas as pd
 
 import algohouse as ah
+import ah_connection as ahc
 import ah_settings as ahs
 
-USER_EMAIL = 'tarasryb@gmail.com'
-SIGNKEY = '9566c74d10037c4d7bbb0407d1e2c649'
+USER_EMAIL = 'intern@intela.io'
+SIGNKEY = '7c45593ac289db2a1d37e6a0387bbd18'
 
 
-# USER_EMAIL = 'vyklyuk@ukr.net'
-# SIGNKEY = '81855ad8681d0d86d1e91e00167939cb'
+def test_get_orderbook():
+    # ahs.DOMAIN = 'http://127.0.0.1:5000'
 
-
-def _test_get_orderbook():
-    ahs.DOMAIN = 'http://127.0.0.1:5000'
-    res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
-                                  exchange='tiny',  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
-                                  instrument='1000LUNCBUSD',
+    conn = ahc.Connection(USER_EMAIL, SIGNKEY)
+    res, res_c = ah.get_orderbook(conn,
+                                  exchange='bitfinex', # 'tiny',  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
+                                  instrument='BTCUSD',  # '1000LUNCBUSD',
                                   # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
-                                  from_time='2022-11-12T10:00:00'
+                                  from_time='2023-01-01T12:00:00'
                                   )
-    print(res.shape)
+    print(res['bid'].size)
+    print(res['ask'].size)
     assert not res is None
 
 
-def _test_get_orderbook_reset():
-    res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
+def test_get_orderbook_reset():
+    conn = ahc.Connection(USER_EMAIL, SIGNKEY)
+    res, res_c = ah.get_orderbook(conn,
                                   exchange='lbank',  # 'binance',  # 'binance/f',
                                   instrument='BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
                                   from_time='2022-11-12T10:00:00'
                                   )
-    print(res.shape)
+    print(res['bid'].size)
+    print(res['ask'].size)
     assert not res is None
 
 
-def _test_get_cached_orderbook():
-    ahs.DOMAIN = 'http://127.0.0.1:5000'
-    res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
+def test_get_cached_orderbook():
+    # ahs.DOMAIN = 'http://127.0.0.1:5000'
+    conn = ahc.Connection(USER_EMAIL, SIGNKEY)
+    res, res_c = ah.get_orderbook(conn,
                                   exchange='small',  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
                                   instrument='1000LUNCBUSD',
                                   # 'APEBUSD',  # 'BTS_USDT',  # 'BTCB_USD',  # '1000LUNCBUSD',
@@ -47,7 +50,7 @@ def _test_get_cached_orderbook():
     print(len(res['ask']))
 
     ahs.ORDER_LINES_TO_READ = 1000
-    res, res_c = ah.get_orderbook(USER_EMAIL, SIGNKEY,
+    res, res_c = ah.get_orderbook(conn,
                                   exchange='binance/f',
                                   # 'big,small, tiny'  # 'binance/f',  # 'lbank',  # 'binance',  # 'binance/f',
                                   instrument='1000LUNCBUSD',
