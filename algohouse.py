@@ -8,6 +8,7 @@ import pandas as pd
 import reference_data
 import trades
 import orderbook
+import options
 import ah_connection as ahc
 
 def get_reference_data(exchanges: list = None) -> pd.DataFrame:
@@ -120,3 +121,21 @@ def get_stream(connection: ahc.Connection,
                              exchange, instrument,
                              on_trade, on_order, on_error
                              )
+
+
+def get_options(connection: ahc.Connection,
+               exchange: str, instrument: str,
+               from_time: str, to_time: str) -> pd.DataFrame:
+    """
+
+    Get options quotes
+    :param connection: Algohouse connection object
+    :param exchange: exchange name
+    :param instrument: instrument name
+    :param from_time: start time of the requested data
+    :param to_time: end time of the requested data
+    :return: Pandas DataFrame with the columns: ts, bs (B, S), price, volume
+    """
+    return options.get_options(connection,
+                               exchange, instrument,
+                               from_time, to_time)
